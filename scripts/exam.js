@@ -47,6 +47,30 @@ let warningCountdownRemaining = 0;
 let skippedBatch = [];
 let inSkippedPhase = false;
 
+// Mobile device detection - used to disable resize violations on mobile
+function isMobileDevice() {
+  // Check user agent for mobile indicators
+  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+  const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|tablet/i;
+  
+  // Check screen size (mobile typically < 768px width)
+  const isSmallScreen = window.innerWidth < 768;
+  
+  // Check touch capability
+  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+  
+  // Return true if any mobile indicator is present
+  return mobileRegex.test(userAgent) || (isSmallScreen && isTouchDevice);
+}
+
+// Detect mobile at load time
+const IS_MOBILE_DEVICE = isMobileDevice();
+
+// Log device type for debugging (helps instructors troubleshoot)
+console.log(`Device detected as: ${IS_MOBILE_DEVICE ? 'MOBILE' : 'DESKTOP'}`);
+console.log(`Screen size: ${window.innerWidth}x${window.innerHeight}`);
+console.log(`User agent: ${navigator.userAgent}`);
+
 function saveSkippedBatch() {
   try { localStorage.setItem('exam_skipped_batch_v1', JSON.stringify(skippedBatch)); } catch (e) { console.warn('save skipped batch failed', e); }
 }
@@ -798,13 +822,17 @@ document.addEventListener('keydown', (e) => {
 function showScreenshotViolation() { if (!isExamActive) return; if (warningModal) { document.getElementById('warningText').textContent = 'Screenshot detected. This is a violation.'; warningModal.show(); } }
 
 // Detect significant window resize (possible multi-app split)
+// NOTE: Disabled on mobile devices due to virtual keyboard and in-app browser UI interference
 let lastSize = { w: window.innerWidth, h: window.innerHeight };
 window.addEventListener('resize', () => {
+  // Skip resize violation check on mobile devices (keyboard, toolbar changes trigger false positives)
+  if (IS_MOBILE_DEVICE) return;
+  
   const w = window.innerWidth, h = window.innerHeight;
   const dw = Math.abs(w - lastSize.w), dh = Math.abs(h - lastSize.h);
   lastSize = { w, h };
   if (isExamActive && (dw > 200 || dh > 200)) {
-    // Treat large resize as a behavior violation
+    // Treat large resize as a behavior violation (desktop only)
     handleViolation('Screen size changed: this is considered a violation.');
   }
 });
