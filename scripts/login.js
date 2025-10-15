@@ -25,6 +25,10 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    // Disable and hide button immediately to prevent multiple clicks
+    startBtn.disabled = true;
+    startBtn.style.display = 'none';
+    
     // Show loading while checking duplicate and fetching instructions
     startLoading.classList.add('show');
 
@@ -44,6 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (dupExists) {
         alert('Duplicate record exists. Please contact your instructor.');
         startLoading.classList.remove('show');
+        // Re-enable button for retry
+        startBtn.disabled = false;
+        startBtn.style.display = '';
         return;
       }
 
@@ -63,7 +70,18 @@ document.addEventListener('DOMContentLoaded', () => {
       startLoading.classList.remove('show');
       instructionModal.show();
 
+      // Re-enable button if user closes modal without clicking Agree
+      const modalElement = document.getElementById('instructionModal');
+      const handleModalHide = () => {
+        startBtn.disabled = false;
+        startBtn.style.display = '';
+        modalElement.removeEventListener('hidden.bs.modal', handleModalHide);
+      };
+      modalElement.addEventListener('hidden.bs.modal', handleModalHide);
+
       document.getElementById('agreeBtn').onclick = async () => {
+        // Remove the hide listener since user clicked Agree (button should stay hidden)
+        modalElement.removeEventListener('hidden.bs.modal', handleModalHide);
         instructionModal.hide();
         // Show the loader and ensure the UI shows an animation for at least 5s while we prefetch
         try { if (startLoading) startLoading.classList.add('show'); } catch (e){}
@@ -91,6 +109,9 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (err) {
       console.error('Login start error', err);
       startLoading.classList.remove('show');
+      // Re-enable button for retry
+      startBtn.disabled = false;
+      startBtn.style.display = '';
       alert('Connection error. Please check your internet and try again.');
     }
   });
