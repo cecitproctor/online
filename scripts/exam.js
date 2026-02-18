@@ -3,7 +3,7 @@
 // a deployment-specific URL into `window.ANSWER_API_URL` after this script
 // is loaded (see inline script in `index.html`/`exam.html`). To ensure the
 // client uses the injected URL, resolve the effective API URL at call time.
-const FALLBACK_ANSWER_API_URL = "https://script.google.com/macros/s/AKfycbxw4dITKgZHApGwPWdciAWvMMofoT6-jwyqwQK-GPZLQxS23jQxEyWhGk53_58LHKcWIQ/exec";
+const FALLBACK_ANSWER_API_URL = "https://script.google.com/macros/s/AKfycbyrbA0CrWUpJhGeuh9D4tArPp6rDJzzvRdhCewnP0J64E2BqpUbvRqTXsLeFoo2AHoSCA/exec";
 
 function apiUrl() {
   try {
@@ -1044,3 +1044,4 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Start (fresh) exam initialization (delegated to startExam so reload-resume can reuse it)
   await startExam(lastName, firstName, code);
 });
+
