@@ -18,7 +18,6 @@
   <p id="submitStatusText" class="mb-2 text-muted">Submitting status: checking...</p>
         <div class="d-flex gap-2 justify-content-center mt-3">
           <a href="index.html" class="btn btn-accent">Return to Login</a>
-          <button id="exitFsBtn" class="btn btn-secondary">Exit Fullscreen</button>
         </div>
       </div>
     </div>
@@ -49,23 +48,10 @@
       } catch (e) {}
 
       
-       // Exit fullscreen
-        const exitBtn = document.getElementById('exitFsBtn');
-        if (exitBtn) {
-          exitBtn.addEventListener('click', async () => {
-            if (document.fullscreenElement) {
-              try {
-                await document.exitFullscreen();
-              } catch (e) {
-                alert('Unable to exit fullscreen. Please press ESC.');
-              }
-            } else {
-              alert('You are not in fullscreen mode.');
-            }
-          });
-        }
+  
     })();
   </script>
 </body>
 </html>
+
 
