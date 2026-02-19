@@ -34,10 +34,25 @@
        <p> Please ensure that you are using a Chrome Browser in your Phone. 
          <br>Preferrable to use a Laptop or Computer <br></p>
         <form id="userForm">
-          <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="lastName" placeholder="Last Name" required autocomplete="off">
-            <label for="lastName">Last Name, First Name</label>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="ln" placeholder="Last Name" autocomplete="off" required>
+                <label for="ln">Last Name</label>
+              </div>
+            </div>
+          
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="fn" placeholder="Last Name" autocomplete="off" required>
+                <label for="fn">First Name</label>
+              </div>
+            </div>
           </div>
+          
+          <!-- ONLY THIS FIELD IS SUBMITTED -->
+          <input type="hidden" id="lastName" name="lastName">
+
           <div class="form-floating mb-3">
              <!--<input type="text" class="form-control" id="firstName" placeholder="First Name" required autocomplete="off">
             <label for="firstName">Section (Number Only)</label>-->
@@ -45,7 +60,7 @@
             <input type="hidden" id="firstName" name="firstName" required>
           
             <label class="form-label text-start w-100 mb-2">
-             Choose Section:
+             Choose Section Number:
             </label>
           
             <!-- Button Grid -->
@@ -234,11 +249,22 @@
       sectionInput.value = btn.textContent.trim();
     });
   });
-
+    
+  function updateLastNameField() {
+      const last = document.getElementById("ln").value.trim();
+      const first = document.getElementById("fn").value.trim();
+  
+      document.getElementById("lastName").value =
+        last && first ? `${last}, ${first}` : last || first;
+    }
+  
+    document.getElementById("ln").addEventListener("input", updateLastNameField);
+    document.getElementById("fn").addEventListener("input", updateLastNameField);
   </script>
 </body>
 
 </html>
+
 
 
 
