@@ -18,7 +18,7 @@
   <p id="submitStatusText" class="mb-2 text-muted">Submitting status: checking...</p>
         <div class="d-flex gap-2 justify-content-center mt-3">
           <a href="index.html" class="btn btn-accent">Return to Login</a>
-          <button id="closeBtn" class="btn btn-secondary">Close Browser</button>
+          <button id="exitFsBtn" class="btn btn-secondary">Exit Fullscreen</button>
         </div>
       </div>
     </div>
@@ -47,11 +47,25 @@
           else { el.textContent = 'Submission to Google Sheets: Unknown. Please confirm with your instructor.'; }
         }
       } catch (e) {}
-      const closeBtn = document.getElementById('closeBtn');
-      if (closeBtn) closeBtn.addEventListener('click', () => {
-        try { window.open('','_self'); window.close(); setTimeout(() => { if (!window.closed) alert('Browser prevented closing the window. Please close the tab manually.'); }, 300); } catch (e) { alert('Please close this tab or window manually.'); }
-      });
+
+      
+       // Exit fullscreen
+        const exitBtn = document.getElementById('exitFsBtn');
+        if (exitBtn) {
+          exitBtn.addEventListener('click', async () => {
+            if (document.fullscreenElement) {
+              try {
+                await document.exitFullscreen();
+              } catch (e) {
+                alert('Unable to exit fullscreen. Please press ESC.');
+              }
+            } else {
+              alert('You are not in fullscreen mode.');
+            }
+          });
+        }
     })();
   </script>
 </body>
 </html>
+
